@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DUEL PKN - Pancasila dalam Kehidupanku</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts Inter & Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+        .font-outfit {
+            font-family: 'Outfit', sans-serif;
+        }
+        .btn-press {
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-press:active {
+            transform: scale(0.95);
+        }
+        @keyframes fast-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        .animate-fast-pulse {
+            animation: fast-pulse 0.3s ease-in-out;
+        }
+        @keyframes flash-green {
+            0% { background-color: rgba(16, 185, 129, 0.25); }
+            100% { background-color: transparent; }
+        }
+        @keyframes flash-red {
+            0% { background-color: rgba(244, 63, 94, 0.25); }
+            100% { background-color: transparent; }
+        }
+        .flash-success {
+            animation: flash-green 0.3s ease-out;
+        }
+        .flash-danger {
+            animation: flash-red 0.3s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between overflow-x-hidden select-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-800 via-indigo-950 to-slate-950">
+
+    <!-- TOP HEADER -->
+    <header class="w-full bg-slate-900/90 border-b border-slate-800 px-4 py-3 flex flex-wrap items-center justify-between shadow-lg sticky top-0 z-50">
+        <!-- Developer Profile Badge / Header Badge -->
+        <div class="flex items-center space-x-3 bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/80 shadow-inner">
+            <div class="relative">
+                <img src="toonmecom_87c30a (1).jpg" id="developer-avatar" alt="Salman Saidi" class="w-10 h-10 rounded-full object-cover border-2 border-indigo-400 shadow-sm">
+                <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-xs font-bold text-indigo-300 tracking-wide uppercase">SALMAN SAIDI</span>
+                <span class="text-xs md:text-sm font-semibold text-slate-200">salmansaidi01@guru.sd.belajar.id</span>
+            </div>
+        </div>
+
+        <!-- Title / Brand Header -->
+        <div class="hidden md:flex items-center space-x-2">
+            <i class="fa-solid fa-flag text-amber-400 text-xl animate-bounce"></i>
+            <h1 class="font-outfit font-black text-lg lg:text-xl text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-indigo-300 to-sky-300">
+                DUEL PKN - PANCASILA
+            </h1>
+        </div>
+
+        <!-- Audio & Home Quick Actions -->
+        <div class="flex items-center space-x-2">
+            <button id="btn-sound-toggle" onclick="toggleSound()" class="p-2.5 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-400 transition-colors" title="Toggle Sound">
+                <i id="sound-icon" class="fa-solid fa-volume-high text-lg"></i>
+            </button>
+            <button onclick="showMainMenu()" class="p-2.5 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sky-400 transition-colors" title="Kembali ke Menu">
+                <i class="fa-solid fa-house text-lg"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-grow flex flex-col justify-center items-center p-3 md:p-6 w-full max-w-7xl mx-auto">
+
+        <!-- ================= VIEW 1: MAIN MENU ================= -->
+        <div id="view-menu" class="w-full max-w-4xl flex flex-col items-center space-y-6 text-center py-4">
+            <div class="space-y-3">
+                <div class="inline-flex items-center space-x-2 bg-indigo-500/20 text-indigo-300 px-4 py-1.5 rounded-full border border-indigo-500/30 text-xs font-bold tracking-wider uppercase">
+                    <i class="fa-solid fa-trophy text-amber-400"></i>
+                    <span>Mode Edukasi • PKN Kelas 5 Bab 1 Pancasila dalam Kehidupanku</span>
+                </div>
+                <h2 class="font-outfit font-black text-3xl sm:text-5xl lg:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-rose-400 to-indigo-300 drop-shadow-md">
+                    DUEL PKN
+                </h2>
+                <p class="text-slate-300 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
+                    160 Soal Unik (4 Sesi @ 40 Soal)! <b>Setiap jawaban langsung memindahkan soal secara kilat otomatis.</b>
+                </p>
+            </div>
+
+            <!-- Session Selection Cards -->
+            <div class="w-full bg-slate-800/60 p-5 rounded-3xl border border-slate-700/80 shadow-2xl backdrop-blur-md">
+                <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-layer-group text-indigo-400"></i> Pilih Sesi Materi (Total 160 Soal)
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3" id="session-selector-container">
+                    <!-- Session Buttons via JS -->
+                </div>
+            </div>
+
+            <!-- Mode Selection Buttons -->
+            <div class="w-full max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <button onclick="selectGameMode('single')" class="btn-press bg-gradient-to-br from-indigo-600 to-blue-700 hover:from-indigo-500 hover:to-blue-600 border-2 border-indigo-400/50 p-5 rounded-2xl shadow-xl flex flex-col items-center text-center space-y-2 group">
+                    <div class="w-14 h-14 bg-indigo-500/30 rounded-full flex items-center justify-center text-amber-300 text-2xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <span class="font-outfit text-xl font-bold text-white">Mode 1 Pemain</span>
+                    <span class="text-xs text-indigo-200">Santai tanpa timer! Pindah otomatis kilat tiap menjawab.</span>
+                </button>
+
+                <button onclick="selectGameMode('duel')" class="btn-press bg-gradient-to-br from-purple-600 via-pink-600 to-rose-600 hover:from-purple-500 hover:to-rose-500 border-2 border-pink-400/50 p-5 rounded-2xl shadow-xl flex flex-col items-center text-center space-y-2 group">
+                    <div class="w-14 h-14 bg-pink-500/30 rounded-full flex items-center justify-center text-pink-200 text-2xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-bolt-lightning"></i>
+                    </div>
+                    <span class="font-outfit text-xl font-bold text-white">Mode 2 Pemain (Duel Cepat)</span>
+                    <span class="text-xs text-pink-100">Jawab serba cepat! Soal otomatis berganti kilat walau salah/benar.</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= VIEW 2: SINGLE PLAYER QUIZ ================= -->
+        <div id="view-single-player" class="w-full max-w-3xl hidden flex-col space-y-4">
+            <div class="bg-slate-800/80 rounded-2xl p-4 border border-slate-700 flex items-center justify-between shadow-lg">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs text-slate-400 font-semibold uppercase">Skor Perolehan</div>
+                        <div id="sp-score-text" class="text-2xl font-black text-amber-300 font-outfit">0</div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <span id="sp-session-badge" class="px-3 py-1 bg-indigo-500/20 border border-indigo-400/30 rounded-full text-xs font-bold text-indigo-300 uppercase">
+                        Sesi 1
+                    </span>
+                    <div id="sp-progress-text" class="text-xs font-bold text-slate-400 mt-1">Soal 1 / 40</div>
+                </div>
+
+                <div class="flex items-center space-x-2 bg-rose-950/60 border border-rose-500/30 px-3 py-1.5 rounded-xl">
+                    <i class="fa-solid fa-fire text-rose-500 text-lg"></i>
+                    <div>
+                        <div class="text-[10px] text-rose-300 font-bold uppercase tracking-wider">Combo</div>
+                        <div id="sp-combo-text" class="text-sm font-black text-rose-400">0x</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div id="sp-card" class="bg-slate-800/90 rounded-3xl p-6 border border-slate-700 shadow-2xl space-y-6 transition-all">
+                <div class="min-h-[80px] flex items-center justify-center text-center">
+                    <h3 id="sp-question-text" class="text-lg md:text-xl font-bold text-slate-100 leading-relaxed">
+                        Loading pertanyaan...
+                    </h3>
+                </div>
+
+                <div id="sp-options-container" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+            </div>
+
+            <!-- Quick Flash Explanation Card -->
+            <div id="sp-explanation-card" class="hidden bg-slate-900/90 border-2 rounded-2xl p-4 text-center shadow-2xl transition-all">
+                <div class="flex items-center justify-center space-x-2 font-bold text-base" id="sp-feedback-title"></div>
+                <p id="sp-explanation-text" class="text-xs text-slate-300 mt-1"></p>
+            </div>
+        </div>
+
+        <!-- ================= VIEW 3: TWO PLAYER DUEL ================= -->
+        <div id="view-duel" class="w-full hidden flex-col space-y-3">
+            <div class="bg-slate-800/90 rounded-2xl p-3 border border-slate-700 flex items-center justify-between shadow-md">
+                <div class="flex items-center space-x-2">
+                    <span class="w-3 h-3 bg-rose-500 rounded-full animate-ping"></span>
+                    <span class="font-outfit font-extrabold text-xs sm:text-sm text-amber-300 uppercase tracking-wider">KOMPETISI ADU CEPAT (REBUTAN POIN)</span>
+                </div>
+                <div class="text-xs font-bold text-indigo-300 bg-indigo-950 px-3 py-1 rounded-full border border-indigo-800" id="duel-session-badge">
+                    Sesi 1
+                </div>
+                <div class="text-xs font-bold text-slate-300" id="duel-progress-text">
+                    Soal 1 / 40
+                </div>
+            </div>
+
+            <!-- Question Prompt Banner Center -->
+            <div id="duel-card" class="bg-slate-800/95 border-2 border-amber-500/40 rounded-2xl p-4 shadow-xl text-center relative overflow-hidden">
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-400 block mb-1">Soal Duel - Siapa Tercepat Menjawab Benar?</span>
+                <p id="duel-question-text" class="text-base sm:text-lg font-extrabold text-white leading-snug">
+                    Loading soal duel...
+                </p>
+                <div id="duel-speed-banner" class="hidden absolute inset-0 text-white font-black text-lg sm:text-xl flex items-center justify-center z-10 animate-fast-pulse"></div>
+            </div>
+
+            <!-- Split-Screen Grid Left (Player 1) vs Right (Player 2) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                <!-- PLAYER 1 (APEL) -->
+                <div id="p1-box" class="bg-gradient-to-b from-rose-950/80 to-slate-900 border-2 border-rose-500/50 rounded-3xl p-4 flex flex-col justify-between shadow-2xl relative overflow-hidden transition-all">
+                    <div class="flex items-center justify-between pb-2 border-b border-rose-800/50 mb-2">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center font-black text-sm">🍎</div>
+                            <span class="font-outfit font-extrabold text-rose-300 text-sm sm:text-base">PEMAIN 1 (APEL)</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] text-rose-300 font-semibold uppercase block">Skor</span>
+                            <span id="p1-score-text" class="text-2xl font-black text-amber-300 font-outfit">0</span>
+                        </div>
+                    </div>
+
+                    <div id="p1-options-container" class="grid grid-cols-1 gap-2 my-auto"></div>
+
+                    <div id="p1-status" class="mt-2 text-center min-h-[20px] text-xs font-bold text-rose-200">
+                        Tekan cepat!
+                    </div>
+                </div>
+
+                <!-- PLAYER 2 (ANGGUR) -->
+                <div id="p2-box" class="bg-gradient-to-b from-purple-950/80 to-slate-900 border-2 border-purple-500/50 rounded-3xl p-4 flex flex-col justify-between shadow-2xl relative overflow-hidden transition-all">
+                    <div class="flex items-center justify-between pb-2 border-b border-purple-800/50 mb-2">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-black text-sm">🍇</div>
+                            <span class="font-outfit font-extrabold text-purple-300 text-sm sm:text-base">PEMAIN 2 (ANGGUR)</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] text-purple-300 font-semibold uppercase block">Skor</span>
+                            <span id="p2-score-text" class="text-2xl font-black text-amber-300 font-outfit">0</span>
+                        </div>
+                    </div>
+
+                    <div id="p2-options-container" class="grid grid-cols-1 gap-2 my-auto"></div>
+
+                    <div id="p2-status" class="mt-2 text-center min-h-[20px] text-xs font-bold text-purple-200">
+                        Tekan cepat!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= VIEW 4: SCORECARD / RESULT ================= -->
+        <div id="view-result" class="w-full max-w-2xl hidden flex-col items-center space-y-6 text-center py-6">
+            <div class="bg-slate-800/90 rounded-3xl p-8 border border-slate-700 shadow-2xl w-full flex flex-col items-center space-y-6">
+                <div class="w-20 h-20 rounded-full bg-amber-500/20 text-amber-400 border-2 border-amber-400 flex items-center justify-center text-4xl shadow-inner">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+
+                <div>
+                    <h2 class="font-outfit font-black text-3xl text-white">Kompetisi Selesai!</h2>
+                    <p id="result-subtitle" class="text-slate-300 text-sm mt-1">Hasil Akhir Pertandingan PKN Pancasila</p>
+                </div>
+
+                <div id="result-stars" class="flex space-x-2 text-3xl text-amber-400">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+
+                <div id="result-details" class="w-full bg-slate-900/80 p-5 rounded-2xl border border-slate-700/80 space-y-3"></div>
+
+                <div class="flex flex-wrap justify-center gap-3 w-full pt-2">
+                    <button onclick="restartCurrentSession()" class="btn-press bg-slate-700 hover:bg-slate-600 text-white font-bold px-5 py-2.5 rounded-xl border border-slate-600 text-sm flex items-center space-x-2">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        <span>Main Lagi</span>
+                    </button>
+                    <button onclick="showMainMenu()" class="btn-press bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-6 py-2.5 rounded-xl shadow-lg text-sm flex items-center space-x-2">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Menu Utama</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="w-full bg-slate-900 border-t border-slate-800 py-3 text-center text-xs text-slate-400">
+        <p>© 2026 Pendidikan Pancasila Kelas 5 SD - Bab 1 Pancasila dalam Kehidupanku | Bank Soal 160 Variasi Interaktif</p>
+    </footer>
+
+    <script>
+        /* SOUND SYNTHESIZER */
+        let audioCtx = null;
+        let soundEnabled = true;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            initAudio();
+            if (!audioCtx) return;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            const now = audioCtx.currentTime;
+
+            if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.exponentialRampToValueAtTime(110, now + 0.15);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                osc.start(now);
+                osc.stop(now + 0.15);
+            } else if (type === 'click') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(400, now);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                osc.start(now);
+                osc.stop(now + 0.05);
+            } else if (type === 'steal') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(783.99, now);
+                osc.frequency.exponentialRampToValueAtTime(1174.66, now + 0.2);
+                gain.gain.setValueAtTime(0.35, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            } else if (type === 'win') {
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, idx) => {
+                    const subOsc = audioCtx.createOscillator();
+                    const subGain = audioCtx.createGain();
+                    subOsc.connect(subGain);
+                    subGain.connect(audioCtx.destination);
+                    subOsc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                    subGain.gain.setValueAtTime(0.2, now + idx * 0.08);
+                    subGain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.25);
+                    subOsc.start(now + idx * 0.08);
+                    subOsc.stop(now + idx * 0.08 + 0.25);
+                });
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            icon.className = soundEnabled ? 'fa-solid fa-volume-high text-lg' : 'fa-solid fa-volume-xmark text-lg text-slate-500';
+        }
+
+        /* DATASET GENERATOR - 4 SESSIONS x 40 QUESTIONS = 160 TOTAL PKN QUESTIONS */
+        const SESSIONS = [
+            { id: 1, title: 'Sesi 1: Nilai & Lambang Pancasila', desc: 'Pemahaman Sila 1-5, Simbol Garuda, dan Makna Lambang' },
+            { id: 2, title: 'Sesi 2: Penerapan Pancasila Rumah & Sekolah', desc: 'Pengamalan Sila di Lingkungan Keluarga dan Sekolah' },
+            { id: 3, title: 'Sesi 3: Penerapan Pancasila Masyarakat & Berbangsa', desc: 'Gotong Royong, Toleransi, dan Musyawarah Berbangsa' },
+            { id: 4, title: 'Sesi 4: Sejarah & Karakter Profil Pelajar Pancasila', desc: 'BPUPKI, PPKI, Perumusan Pancasila & Dimensi Profil Pelajar' }
+        ];
+
+        function generateQuestions() {
+            const rawData = {
+                1: [
+                    ["Simbol Sila Pertama Pancasila adalah...", ["Bintang", "Rantai", "Pohon Beringin", "Kepala Banteng"], 0, "Bintang emas merupakan lambang Sila ke-1."],
+                    ["Bintang emas pada Garuda Pancasila melambangkan...", ["Ketuhanan Yang Maha Esa", "Kemanusiaan yang adil dan beradab", "Persatuan Indonesia", "Keadilan sosial"], 0, "Bintang emas melambangkan Sila Pertama."],
+                    ["Simbol Sila Kedua Pancasila adalah...", ["Rantai", "Bintang", "Pohon Beringin", "Padi dan Kapas"], 0, "Rantai emas melambangkan Sila ke-2."],
+                    ["Mata rantai berbentuk segi empat pada rantai melambangkan...", ["Laki-laki", "Perempuan", "Persatuan", "Musyawarah"], 0, "Segi empat melambangkan laki-laki."],
+                    ["Mata rantai berbentuk lingkaran pada lambang Sila Kedua melambangkan...", ["Perempuan", "Laki-laki", "Keberanian", "Keadilan"], 0, "Lingkaran melambangkan perempuan."],
+                    ["Simbol Sila Ketiga Pancasila adalah...", ["Pohon Beringin", "Kepala Banteng", "Rantai", "Bintang"], 0, "Pohon Beringin melambangkan Sila ke-3."],
+                    ["Akar tunjang yang menghunjam dalam pada Pohon Beringin melambangkan...", ["Persatuan dan kesatuan Indonesia", "Keberagaman suku", "Keadilan bagi rakyat", "Musyawarah mufakat"], 0, "Akar kokoh melambangkan persatuan bangsa."],
+                    ["Simbol Sila Keempat Pancasila adalah...", ["Kepala Banteng", "Pohon Beringin", "Padi dan Kapas", "Bintang"], 0, "Kepala Banteng melambangkan Sila ke-4."],
+                    ["Banteng digunakan sebagai simbol Sila Keempat karena banteng merupakan hewan yang suka...", ["Berkumpul dan berdiskusi", "Bekerja keras sendiri", "Bermain bersama", "Berburu makanan"], 0, "Banteng suka berkumpul, mencerminkan musyawarah."],
+                    ["Simbol Sila Kelima Pancasila adalah...", ["Padi dan Kapas", "Kepala Banteng", "Pohon Beringin", "Rantai"], 0, "Padi dan kapas melambangkan Sila ke-5."],
+                    ["Padi dan Kapas pada lambang Sila Kelima melambangkan kebutuhan dasar manusia, yaitu...", ["Pangan dan Sandang", "Papan dan Hiburan", "Pendidikan dan Kesehatan", "Rumah dan Kendaraan"], 0, "Padi melambangkan pangan dan kapas melambangkan sandang."],
+                    ["Jumlah bulu pada masing-masing sayap Garuda Pancasila adalah...", ["17", "8", "19", "45"], 0, "Bulu sayap berjumlah 17 melambangkan tanggal kemerdekaan."],
+                    ["Jumlah bulu pada ekor Garuda Pancasila adalah...", ["8", "17", "19", "45"], 0, "Bulu ekor berjumlah 8 melambangkan bulan Agustus."],
+                    ["Jumlah bulu di bawah perisai/pangkal ekor Garuda Pancasila adalah...", ["19", "45", "17", "8"], 0, "Bulu pangkal ekor berjumlah 19."],
+                    ["Jumlah bulu pada leher Garuda Pancasila adalah...", ["45", "19", "17", "8"], 0, "Bulu leher berjumlah 45 melambangkan tahun 1945."],
+                    ["Pita yang dicengkeram oleh burung Garuda Pancasila bertuliskan semboyan...", ["Bhinneka Tunggal Ika", "Tut Wuri Handayani", "Bersatu Kita Teguh", "NKRI Harga Mati"], 0, "Pita Garuda bertuliskan Bhinneka Tunggal Ika."],
+                    ["Arti dari semboyan 'Bhinneka Tunggal Ika' adalah...", ["Berbeda-beda tetapi tetap satu jua", "Bersama kita bisa", "Bersatu kita teguh bercerai kita runtuh", "Berbeda untuk berpisah"], 0, "Bhinneka Tunggal Ika berarti berbeda-beda tetapi tetap satu."],
+                    ["Warna dasar merah dan putih pada perisai Garuda Pancasila menyerupai warna...", ["Bendera Negara Indonesia", "Lambang Kerajaan", "Pohon Beringin", "Bintang Mas"], 0, "Merah putih melambangkan warna bendera Indonesia."],
+                    ["Garis hitam tebal melintang di tengah perisai Garuda melambangkan...", ["Garis Khatulistiwa", "Garis Batas Negara", "Lautan Luas", "Sinar Matahari"], 0, "Garis tebal melambangkan wilayah Indonesia di garis khatulistiwa."],
+                    ["Sila 'Ketuhanan Yang Maha Esa' mengajarkan kita untuk...", ["Beriman dan bertakwa kepada Tuhan", "Saling bermusyawarah", "Bekerja sama dalam ujian", "Menghormati perbedaan pendapat"], 0, "Sila ke-1 mengenai keimanan kepada Tuhan."],
+                    ["Bunyi sila yang dilambangkan oleh Pohon Beringin adalah...", ["Persatuan Indonesia", "Keadilan sosial bagi seluruh rakyat Indonesia", "Kemanusiaan yang adil dan beradab", "Ketuhanan Yang Maha Esa"], 0, "Pohon Beringin adalah simbol Sila ke-3."],
+                    ["Bunyi Sila Keempat Pancasila adalah...", ["Kerakyatan yang dipimpin oleh hikmat kebijaksanaan dalam permusyawaratan/perwakilan", "Keadilan sosial bagi seluruh rakyat Indonesia", "Persatuan Indonesia", "Kemanusiaan yang adil dan beradab"], 0, "Penulisan sila ke-4 dengan lengkap."],
+                    ["Pancasila bagi bangsa Indonesia berkedudukan sebagai...", ["Dasar Negara dan Pandangan Hidup Bangsa", "Hukum Adat", "Peraturan Sekolah", "Tradisi Daerah"], 0, "Pancasila adalah dasar negara Indonesia."],
+                    ["Latar belakang warna hitam pada simbol Bintang melambangkan...", ["Warna alam dan rahmat Tuhan", "Duka cita", "Keberanian bangsa", "Kesucian hati"], 0, "Latar hitam melambangkan warna alam."],
+                    ["Latar belakang warna merah pada lambang Banteng melambangkan...", ["Keberanian", "Kesucian", "Kemakmuran", "Kejujuran"], 0, "Warna merah melambangkan keberanian."],
+                    ["Latar belakang warna kuning pada lambang Padi dan Kapas melambangkan...", ["Keluhuran dan Kemuliaan", "Keberanian", "Perseorangan", "Kedamaian"], 0, "Kuning melambangkan kemuliaan."],
+                    ["Sila kedua Pancasila menekankan pada nilai...", ["Kemanusiaan dan Kesetaraan", "Keagamaan", "Cinta Tanah Air", "Musyawarah"], 0, "Sila ke-2 mengenai nilai kemanusiaan."],
+                    ["Pancasila disahkan sebagai Dasar Negara Indonesia pada tanggal...", ["18 Agustus 1945", "17 Agustus 1945", "1 Juni 1945", "22 Juni 1945"], 0, "Disahkan PPKI pada 18 Agustus 1945."],
+                    ["Hari Lahir Pancasila diperingati setiap tanggal...", ["1 Juni", "17 Agustus", "18 Agustus", "10 November"], 0, "Hari Lahir Pancasila adalah 1 Juni."],
+                    ["Sila 'Keadilan sosial bagi seluruh rakyat Indonesia' dilambangkan dengan...", ["Padi dan Kapas", "Rantai", "Kepala Banteng", "Bintang"], 0, "Sila ke-5 dilambangkan Padi dan Kapas."],
+                    ["Pancasila terdiri dari berapa sila?", ["5 Sila", "4 Sila", "6 Sila", "7 Sila"], 0, "Panca berarti 5, Sila berarti dasar."],
+                    ["Kata 'Pancasila' berasal dari bahasa...", ["Sansekerta", "Jawa Kuno", "Melayu", "Arab"], 0, "Pancasila berasal dari bahasa Sansekerta."],
+                    ["Dalam bahasa Sansekerta, kata 'Panca' berarti...", ["Lima", "Satu", "Tiga", "Empat"], 0, "Panca artinya lima."],
+                    ["Dalam bahasa Sansekerta, kata 'Sila' berarti...", ["Dasar atau alas", "Atap", "Tiang", "Dinding"], 0, "Sila artinya dasar/prinsip."],
+                    ["Nilai utama dalam Sila Ketiga Pancasila adalah...", ["Persatuan dan Kebangsaan", "Keagamaan", "Demokrasi", "Keadilan Ekonomi"], 0, "Sila ke-3 mengedepankan persatuan."],
+                    ["Makna Sila Keempat sangat erat kaitannya dengan cara pengambilan keputusan secara...", ["Musyawarah mufakat", "Voting sepihak", "Keputusan sepihak", "Pengundian"], 0, "Demokrasi Pancasila mengutamakan musyawarah."],
+                    ["Nilai keadilan dalam Sila Kelima berlaku untuk...", ["Seluruh rakyat Indonesia", "Hanya warga kaya", "Hanya pejabat", "Hanya anak sekolah"], 0, "Keadilan sosial untuk seluruh rakyat."],
+                    ["Arah kepala burung Garuda Pancasila menoleh ke arah...", ["Kanan", "Kiri", "Atas", "Depan"], 0, "Garuda menoleh ke kanan sebagai simbol kebaikan."],
+                    ["Perisai yang menggantung di leher burung Garuda melambangkan...", ["Perjuangan dan Perlindungan Diri", "Perhiasan", "Kekayaan Negara", "Kekuatan Militer"], 0, "Perisai melambangkan pertahanan/perjuangan."],
+                    ["Kedudukan Pancasila sebagai sumber dari segala sumber hukum berarti...", ["Semua peraturan hukum tidak boleh bertentangan dengan Pancasila", "Pancasila dapat diganti", "Hanya berlaku di sekolah", "Hanya untuk pejabat"], 0, "Hukum Indonesia bersumber dari nilai Pancasila."]
+                ],
+                2: [
+                    ["Menghormati anggota keluarga yang sedang beribadah di rumah merupakan pengamalan Sila ke-...", ["1", "2", "3", "4"], 0, "Sila Pertama mengatur ibadah dan toleransi agama."],
+                    ["Membantu adik belajar dengan sabar di rumah adalah contoh penerapan Sila ke-...", ["2", "1", "3", "5"], 0, "Sila Kedua mengajarkan kasih sayang dan kemanusiaan."],
+                    ["Menjaga kerukunan antar anggota keluarga agar tidak bertengkar menerapkan Sila ke-...", ["3", "1", "2", "4"], 0, "Kerukunan memperkuat persatuan keluarga (Sila 3)."],
+                    ["Bermusyawarah menentukan tempat liburan keluarga merupakan penerapan Sila ke-...", ["4", "3", "2", "1"], 0, "Musyawarah keluarga sesuai Sila Keempat."],
+                    ["Membagi tugas membersihkan rumah secara adil kepada setiap anak merupakan pengamalan Sila ke-...", ["5", "4", "3", "2"], 0, "Sikap adil mencerminkan Sila Kelima."],
+                    ["Sebelum makan bersama di rumah, kita membiasakan diri untuk berdoa. Hal ini sesuai Sila ke-...", ["1", "2", "3", "4"], 0, "Berdoa adalah wujud syukur kepada Tuhan (Sila 1)."],
+                    ["Menjenguk teman kelas yang sedang sakit merupakan wujud pengamalan Sila ke-...", ["2", "1", "3", "4"], 0, "Empati terhadap sesama adalah Sila Kedua."],
+                    ["Tidak membeda-bedakan teman di sekolah berdasarkan suku atau agama merupakan Sila ke-...", ["3", "1", "2", "5"], 0, "Menjaga persatuan tanpa membeda-bedakan (Sila 3)."],
+                    ["Kegiatan pemilihan ketua kelas di sekolah dilaksanakan berdasarkan pengamalan Sila ke-...", ["4", "3", "2", "1"], 0, "Pemilihan ketua kelas merupakan bentuk demokrasi (Sila 4)."],
+                    ["Mengargai hasil karya teman tanpa meremehkannya adalah penerapan Sila ke-...", ["5", "4", "3", "2"], 0, "Menghargai hasil karya orang lain Sila Kelima."],
+                    ["Menghormati guru yang sedang mengajar di kelas merupakan contoh pengamalan Sila ke-...", ["2", "1", "4", "5"], 0, "Sopan santun dan hormat kepada guru adalah Sila 2."],
+                    ["Melakukan piket kelas bersama-sama dengan gembira menerapkan nilai...", ["Gotong Royong dan Persatuan", "Persaingan", "Kemandirian individu", "Keadilan sendiri"], 0, "Piket bersama wujud kerja sama dan persatuan."],
+                    ["Jika dalam diskusi kelompok ada perbedaan pendapat, sikap kita yang benar adalah...", ["Menghargai pendapat orang lain", "Marah dan keluar kelompok", "Paksakan pendapat sendiri", "Acuh tak acuh"], 0, "Sila ke-4 mengajarkan saling menghargai pendapat."],
+                    ["Menggunakan uang saku secukupnya dan tidak boros di sekolah adalah penerapan Sila ke-...", ["5", "4", "3", "2"], 0, "Gaya hidup hemat merupakan pengamalan Sila Kelima."],
+                    ["Menyelesaikan masalah perselisihan antarteman di sekolah dengan cara damai sesuai Sila ke-...", ["4", "1", "3", "5"], 0, "Penyelesaian masalah lewat musyawarah (Sila 4)."],
+                    ["Tidak memaksakan kehendak saat memilih permainan bersama teman merupakan Sila ke-...", ["4", "3", "2", "1"], 0, "Tidak memaksakan kehendak adalah prinsip Sila 4."],
+                    ["Membantu teman yang jatuh di halaman sekolah tanpa memandang asal-usulnya sesuai Sila ke-...", ["2", "1", "4", "5"], 0, "Tolong menolong antar manusia sesuai Sila 2."],
+                    ["Mengikuti upacara bendera hari Senin dengan tertib dan khidmat di sekolah mencerminkan Sila ke-...", ["3", "1", "2", "4"], 0, "Cinta tanah air dan disiplin upacara (Sila 3)."],
+                    ["Menjaga kebersihan lingkungan sekolah secara bersama-sama merupakan bentuk...", ["Tanggung jawab bersama", "Tugas penjaga sekolah saja", "Tugas guru", "Beban murid"], 0, "Menjaga sekolah adalah tanggung jawab seluruh warga sekolah."],
+                    ["Mengembalikan barang milik teman yang dipinjam tepat waktu menunjukkan sikap...", ["Jujur dan Bertanggung jawab", "Sombong", "Hemat", "Acuh"], 0, "Kejujuran sesuai dengan nilai-nilai Pancasila."],
+                    ["Memberikan kesempatan teman berdoa sesuai agamanya di sekolah adalah pengamalan Sila ke-...", ["1", "2", "3", "4"], 0, "Toleransi beragama adalah Sila Pertama."],
+                    ["Berbicara dengan bahasa yang sopan kepada orang tua di rumah sesuai Sila ke-...", ["2", "1", "3", "5"], 0, "Sopan santun dalam keluarga mencerminkan Sila 2."],
+                    ["Mengutamakan kepentingan bersama di atas kepentingan pribadi di sekolah merupakan Sila ke-...", ["3", "4", "2", "1"], 0, "Cinta tanah air dan persatuan mengutamakan kepentingan bersama."],
+                    ["Menerima keputusan hasil musyawarah kelas dengan lapang dada adalah pengamalan Sila ke-...", ["4", "3", "2", "1"], 0, "Menerima hasil keputusan musyawarah (Sila 4)."],
+                    ["Suka menabung dan tidak menghamburkan uang jajan adalah contoh pengamalan Sila ke-...", ["5", "4", "3", "2"], 0, "Sikap hemat dan sederhana merupakan Sila 5."],
+                    ["Mengakui persamaan derajat dan hak sesama teman di sekolah mencerminkan Sila ke-...", ["2", "1", "3", "4"], 0, "Persamaan derajat adalah prinsip Sila Kedua."],
+                    ["Bangga menggunakan seragam batik pada hari tertentu di sekolah merupakan penerapan Sila ke-...", ["3", "2", "1", "4"], 0, "Bangga pada budaya bangsa adalah Sila Ketiga."],
+                    ["Membantu ibu merapikan tempat tidur sendiri merupakan bentuk sikap...", ["Mandiri dan bertanggung jawab", "Terpaksa", "Mengharap imbalan", "Manja"], 0, "Tanggung jawab di rumah mencerminkan nilai nilai Pancasila."],
+                    ["Mencium tangan orang tua sebelum berangkat ke sekolah adalah bentuk...", ["Hormat dan patuh kepada orang tua", "Formalitas saja", "Takut dimarahi", "Minta uang jajan"], 0, "Menghormati orang tua sesuai nilai Sila Kedua."],
+                    ["Membagi makanan jajan secara adil kepada teman dekat mencerminkan Sila ke-...", ["5", "4", "3", "2"], 0, "Sikap adil dalam berbagi adalah Sila Kelima."],
+                    ["Jika teman tidak membawa pensil, tindakan kita yang baik sesuai Pancasila adalah...", ["Meminjamkan pensil spare", "Ejek teman tersebut", "Abaikan saja", "Minta bayaran"], 0, "Menolong teman sesuai nilai Sila Kedua."],
+                    ["Menjaga fasilitas dan kebersihan toilet sekolah merupakan pengamalan Sila ke-...", ["5", "4", "3", "2"], 0, "Menjaga kebersihan dan fasilitas umum adalah Sila 5."],
+                    ["Gotong royong membersihkan taman sekolah membuat pekerjaan terasa...", ["Lebih ringan dan cepat selesai", "Semakin berat", "Sangat lama", "Membosankan"], 0, "Gotong royong membuat kerja berat jadi ringan."],
+                    ["Menghargai pendapat teman yang berbeda saat kerja kelompok merupakan contoh sikap...", ["Toleransi dan demokratis", "Egois", "Pemarah", "Acuh"], 0, "Toleransi pendapat adalah prinsip Sila Keempat."],
+                    ["Mendoakan orang tua setiap hari merupakan pengamalan Sila ke-...", ["1", "2", "3", "4"], 0, "Berdoa wujud nilai Ketuhanan Sila Pertama."],
+                    ["Sikap jujur saat mengerjakan ulangan di kelas tanpa mencontek mencerminkan nilai...", ["Integritas dan Moral Pancasila", "Kelemahan", "Kecurangan", "Kerja sama"], 0, "Jujur saat ulangan adalah integritas nilai Pancasila."],
+                    ["Mendengarkan penjelaskan guru dengan baik di kelas merupakan wujud...", ["Menghormati guru", "Kewajiban paksaan", "Takut dihukum", "Mencari perhatian"], 0, "Mendengarkan guru bentuk hormat pada orang tua di sekolah."],
+                    ["Membantu adik yang kesulitan mengerjakan tugas rumah adalah penerapan Sila ke-...", ["2", "1", "3", "4"], 0, "Tolong menolong saudara di rumah (Sila 2)."],
+                    ["Tidak memilih-milih kelompok berdasarkan kaya atau miskin di sekolah adalah Sila ke-...", ["5", "4", "3", "2"], 0, "Sikap adil tanpa pandang status (Sila 5)."],
+                    ["Mendukung teman yang mengikuti perlombaan membawa nama sekolah adalah wujud...", ["Persatuan dan Kebanggaan", "Iri hati", "Ketakutan", "Kesombongan"], 0, "Mendukung teman memperkuat persatuan (Sila 3)."]
+                ],
+                3: [
+                    ["Kerja bakti membersihkan saluran air di lingkungan RT merupakan bentuk pengamalan Sila ke-...", ["3", "1", "2", "4"], 0, "Gotong royong warga memperkuat persatuan (Sila 3)."],
+                    ["Menjaga ketenangan dan tidak bising saat tetangga sedang beribadah adalah wujud Sila ke-...", ["1", "2", "3", "4"], 0, "Toleransi antarumat beragama adalah Sila Pertama."],
+                    ["Memberikan bantuan sembako kepada korban bencana alam merupakan pengamalan Sila ke-...", ["2", "1", "3", "5"], 0, "Kemanusiaan dan kepedulian sosial adalah Sila Kedua."],
+                    ["Musyawarah pemilihan Ketua RT dilakukan untuk mencapai...", ["Mufakat / Kesepakatan bersama", "Kemenangan pribadi", "Perselisihan warga", "Keuntungan kelompok"], 0, "Musyawarah bertujuan mencapai mufakat."],
+                    ["Membayar pajak tepat waktu merupakan salah satu wujud pengamalan Sila ke-...", ["5", "4", "3", "2"], 0, "Kewajiban warga demi keadilan pembangunan (Sila 5)."],
+                    ["Menjaga kebersihan sarana umum seperti taman kota merupakan kewajiban...", ["Seluruh warga masyarakat", "Pemerintah saja", "Petugas kebersihan saja", "Anak-anak saja"], 0, "Menjaga fasilitas umum tanggung jawab bersama."],
+                    ["Sikap tidak memaksakan agama kepada orang lain merupakan wujud penerapan Sila ke-...", ["1", "2", "3", "4"], 0, "Kebebasan beragama diatur dalam Sila Pertama."],
+                    ["Menghormati kebudayaan dan tarian dari daerah lain di Indonesia sesuai Sila ke-...", ["3", "2", "1", "4"], 0, "Cinta budaya Indonesia memperkuat Sila Ketiga."],
+                    ["Menghindari sikap kekerasan dalam menyelesaikan masalah di masyarakat mencerminkan Sila ke-...", ["2", "1", "3", "4"], 0, "Kemanusiaan yang adil dan beradab mengutakaman kedamaian."],
+                    ["Keputusan musyawarah warga harus dilaksanakan oleh seluruh warga dengan...", ["Rasa tanggung jawab", "Keterpaksaan", "Marah-marah", "Abaikan saja"], 0, "Hasil keputusan harus ditaati dengan bertanggung jawab."],
+                    ["Sikap tidak bergaya hidup mewah dan tidak konsumtif di masyarakat sesuai Sila ke-...", ["5", "4", "3", "2"], 0, "Pola hidup sederhana merupakan Sila Kelima."],
+                    ["Ronda malam atau siskamling di kampung bertujuan untuk menjaga...", ["Keamanan dan ketertiban bersama", "Gengsi warga", "Ajang ngobrol saja", "Hiburan malam"], 0, "Siskamling wujud gotong royong menjaga keamanan."],
+                    ["Rasa cinta dan bangga tanah air Indonesia dapat ditunjukkan dengan cara...", ["Membeli dan menggunakan produk dalam negeri", "Selalu membeli barang luar negeri", "Ejek budaya sendiri", "Lupa bahasa Indonesia"], 0, "Cinta produk dalam negeri adalah bentuk Sila 3."],
+                    ["Apabila melihat tetangga terkena musibah kebakaran, tindakan kita adalah...", ["Membantu memberikan bantuan pakaian dan makanan", "Melihat saja dari jauh", "Foto-foto untuk medsos", "Menertawakan"], 0, "Membantu korban musibah mencerminkan Sila Kedua."],
+                    ["Sila Kelima mengajarkan kita untuk menghargai hak dan kewajiban...", ["Orang lain secara seimbang", "Diri sendiri saja", "Orang kaya saja", "Pejabat saja"], 0, "Keseimbangan hak dan kewajiban Sila 5."],
+                    ["Sikap mengutamakan musyawarah dalam mengambil keputusan bersama di desa adalah Sila ke-...", ["4", "3", "2", "1"], 0, "Musyawarah di desa sesuai Sila Keempat."],
+                    ["Toleransi antarumat beragama di Indonesia menciptakan masyarakat yang...", ["Rukun dan damai", "Penuh permusuhan", "Kacau balau", "Sering bertengkar"], 0, "Toleransi melahirkan kerukunan nasional."],
+                    ["Menggunakan Bahasa Indonesia yang baik dan benar saat berkomunikasi antar suku wujud Sila ke-...", ["3", "2", "1", "4"], 0, "Bahasa persatuan adalah Bahasa Indonesia (Sila 3)."],
+                    ["Sikap rela berkorban demi kepentingan bangsa dan negara merupakan nilai Sila ke-...", ["3", "4", "2", "1"], 0, "Rela berkorban demi negara adalah Sila Ketiga."],
+                    ["Suka bekerja keras dan tidak mudah menyerah dalam mencapai cita-cita adalah nilai Sila ke-...", ["5", "4", "3", "2"], 0, "Kerja keras merupakan salah satu nilai Sila 5."],
+                    ["Menjaga persatuan dan kesatuan bangsa adalah tanggung jawab...", ["Seluruh rakyat Indonesia", "TNI dan Polri saja", "Presiden saja", "Guru saja"], 0, "Persatuan adalah kewajiban seluruh warga."],
+                    ["Bangsa Indonesia terdiri dari beraneka ragam suku dan budaya, maka kita harus saling...", ["Menghargai dan menghormati", "Saling membandingkan", "Merendahkan suku lain", "Membuat geng suku"], 0, "Saling menghargai keanekaragaman suku."],
+                    ["Bentuk kerja sama yang khas dari bangsa Indonesia sejak zaman dahulu adalah...", ["Gotong royong", "Individualis", "Persaingan ketat", "Kompetisi"], 0, "Gotong royong tradisi khas bangsa Indonesia."],
+                    ["Manfaat utama dari pelaksanaan gotong royong di masyarakat adalah...", ["Pekerjaan menjadi lebih ringan dan cepat selesai", "Membuang-buang waktu", "Menambah beban biaya", "Membuat capek"], 0, "Gotong royong meringankan pekerjaan berat."],
+                    ["Tidak perbuatan semena-mena kepada orang lain di masyarakat sesuai Sila ke-...", ["2", "1", "3", "4"], 0, "Tidak semena-mena adalah prinsip Sila Kedua."],
+                    ["Jika terjadi perselisihan warga, cara terbaik penyelesaiannya adalah...", ["Musyawarah kekeluargaan", "Main hakim sendiri", "Berkelahi", "Saling dendam"], 0, "Penyelesaian terbaik dengan musyawarah."],
+                    ["Menghargai hasil karya orang lain di masyarakat merupakan wujud pengamalan Sila ke-...", ["5", "4", "3", "2"], 0, "Menghargai karya orang lain adalah Sila Kelima."],
+                    ["Mata pencaharian warga yang beragam harus kita hargai karena saling...", ["Melengkapi kebutuhan hidup", "Merugikan", "Bersaing jahat", "Membuat kacau"], 0, "Keberagaman pekerjaan saling melengkapi."],
+                    ["Cinta tanah air dan bangsa Indonesia dinamakan juga sikap...", ["Nasionalisme", "Egoisme", "Individualisme", "Etnosentrisme"], 0, "Nasionalisme artinya paham cinta tanah air."],
+                    ["Sikap menganggap suku bangsanya sendiri paling unggul dibanding suku lain dinamakan...", ["Etnosentrisme (Sikap tidak terpuji)", "Nasionalisme", "Patriotisme", "Toleransi"], 0, "Etnosentrisme harus dihindari karena merusak persatuan."],
+                    ["Mengakui bahwa manusia memiliki derajat yang sama di hadapan Tuhan merupakan Sila ke-...", ["2", "1", "3", "4"], 0, "Persamaan derajat manusia Sila Kedua."],
+                    ["Cita-cita bangsa Indonesia yang tertuang dalam Pembukaan UUD 1945 alinea ke-4 adalah mewujudkan...", ["Keadilan sosial dan kemakmuran rakyat", "Perang antar bangsa", "Kekayaan pribadi", "Kekuasaan wilayah"], 0, "Mewujudkan keadilan sosial bagi seluruh rakyat."],
+                    ["Pelanggaran lalu lintas di jalan raya mengganggu hak...", ["Pengguna jalan lainnya", "Polisi saja", "Diri sendiri saja", "Pemerintah"], 0, "Mati aturan lalu lintas demi keselamatan bersama."],
+                    ["Menjaga keharmonisan dalam masyarakat majemuk dapat dipelihara dengan mengembangkan sikap...", ["Tenggang rasa dan empati", "Egois", "Sombong", "Apatis"], 0, "Tenggang rasa menjaga kerukunan majemuk."],
+                    ["Setiap warga negara memiliki hak dan kewajiban yang sama di dalam...", ["Hukum dan Pemerintahan", "Suku bangsa", "Kekayaan pribadi", "Status sosial"], 0, "Persamaan hak di dalam hukum dan pemerintahan."],
+                    ["Sikap patriotisme di zaman sekarang dapat diwujudkan oleh pelajar dengan cara...", ["Belajar giat dan berprestasi", "Ikut berperang", "Demo anarkis", "Tawuran sekolah"], 0, "Pelajar menunjukkan patriotisme lewat belajar."],
+                    ["Bangga menggunakan barang produksi buatan anak bangsa Indonesia mencerminkan Sila ke-...", ["3", "2", "1", "4"], 0, "Menggunakan produk lokal wujud Sila Ketiga."],
+                    ["Keadilan sosial dapat terwujud apabila hak dan kewajiban dilaksanakan secara...", ["Seimbang", "Berat sebelah", "Dahulukan hak saja", "Abaikan kewajiban"], 0, "Keseimbangan hak dan kewajiban."],
+                    ["Pengambilan keputusan dengan suara terbanyak (voting) dilakukan apabila musyawarah...", ["Tidak mencapai mufakat", "Baru dimulai", "Disetujui semua orang", "Tanpa ada masalah"], 0, "Voting dilakukan jika musyawarah mufakat dead-lock."],
+                    ["Bhinneka Tunggal Ika dipetik dari Kitab Sutasoma karangan...", ["Mpu Tantular", "Mpu Prapanca", "Mpu Sedah", "Mpu Panuluh"], 0, "Kitab Sutasoma dikarang oleh Mpu Tantular."]
+                ],
+                4: [
+                    ["Badan yang bertugas menyelidiki usaha-usaha persiapan kemerdekaan Indonesia adalah...", ["BPUPKI", "PPKI", "KNPI", "GAPI"], 0, "BPUPKI kepanjangan dari Badan Penyelidik Usaha-Usaha Persiapan Kemerdekaan Indonesia."],
+                    ["BPUPKI didirikan pada tanggal...", ["1 Maret 1945", "29 Mei 1945", "1 Juni 1945", "17 Agustus 1945"], 0, "BPUPKI dibentuk 1 Maret 1945."],
+                    ["Ketua organisasi BPUPKI adalah...", ["Dr. K.R.T. Radjiman Wedyodiningrat", "Ir. Soekarno", "Drs. Mohammad Hatta", "Mr. Soepomo"], 0, "Ketua BPUPKI adalah Dr. Radjiman Wedyodiningrat."],
+                    ["Tokoh yang pertama kali menyampaikan usulan rumusan Dasar Negara pada tanggal 29 Mei 1945 adalah...", ["Mr. Mohammad Yamin", "Mr. Soepomo", "Ir. Soekarno", "Drs. Mohammad Hatta"], 0, "Moh. Yamin berpidato 29 Mei 1945."],
+                    ["Tokoh yang menyampaikan usulan Dasar Negara pada tanggal 31 Mei 1945 adalah...", ["Mr. Soepomo", "Mr. Mohammad Yamin", "Ir. Soekarno", "K.H. Wachid Hasyim"], 0, "Mr. Soepomo berpidato pada 31 Mei 1945."],
+                    ["Istilah 'Pancasila' dikemukakan pertama kali oleh Ir. Soekarno pada tanggal...", ["1 Juni 1945", "29 Mei 1945", "22 Juni 1945", "18 Agustus 1945"], 0, "Pidato Ir. Soekarno 1 Juni 1945 melahirkan nama Pancasila."],
+                    ["Panitia Kecil beranggotakan 9 orang yang merumuskan Piagam Jakarta disebut...", ["Panitia Sembilan", "Panitia Delapan", "PPKI", "BPUPKI"], 0, "Dikenal dengan nama Panitia Sembilan."],
+                    ["Piagam Jakarta dirumuskan pada tanggal...", ["22 Juni 1945", "1 Juni 1945", "17 Agustus 1945", "18 Agustus 1945"], 0, "Piagam Jakarta disahkan 22 Juni 1945."],
+                    ["Perubahan sila pertama Piagam Jakarta dilakukan demi menjaga...", ["Persatuan dan kesatuan bangsa Indonesia", "Keuntungan kelompok tertentu", "Keinginan Jepang", "Perintah penjajah"], 0, "Sila ke-1 diubah demi persatuan bangsa."],
+                    ["Kalimat sila pertama pada Piagam Jakarta sebelum diubah adalah...", ["Ketuhanan dengan kewajiban menjalankan syariat Islam bagi pemeluk-pemeluknya", "Ketuhanan Yang Maha Esa", "Kemanusiaan yang adil dan beradab", "Persatuan Indonesia"], 0, "Sila pertama semula berisi syariat Islam."],
+                    ["Lembaga yang mengesahkan Pancasila sebagai Dasar Negara pada 18 Agustus 1945 adalah...", ["PPKI", "BPUPKI", "KNIL", "Panitia Sembilan"], 0, "PPKI mengesahkan Pancasila pada 18 Agustus 1945."],
+                    ["Ketua Panitia Persiapan Kemerdekaan Indonesia (PPKI) adalah...", ["Ir. Soekarno", "Drs. Mohammad Hatta", "Mr. Soepomo", "Dr. Radjiman"], 0, "Ir. Soekarno adalah Ketua PPKI."],
+                    ["Singkatan dari PPKI adalah...", ["Panitia Persiapan Kemerdekaan Indonesia", "Panitia Penyelidik Kemerdekaan Indonesia", "Perkumpulan Pemuda Kemerdekaan Indonesia", "Persatuan Pemuda Kemerdekaan Indonesia"], 0, "PPKI singkatan dari Panitia Persiapan Kemerdekaan Indonesia."],
+                    ["Sikap para pendiri bangsa dalam merumuskan Pancasila patut kita contoh, yaitu...", ["Mengutamakan kepentingan bangsa di atas kepentingan pribadi", "Mencari keuntungan pribadi", "Saling memusuhi", "Mementingkan kelompok saja"], 0, "Para tokoh mengutamakan kepentingan bangsa."],
+                    ["Salah satu dimensi Profil Pelajar Pancasila yang mengajarkan keimanan adalah...", ["Beriman, bertakwa kepada Tuhan YME, dan berakhlak mulia", "Bernalar kritis", "Gotong royong", "Kreatif"], 0, "Dimensi pertama Profil Pelajar Pancasila."],
+                    ["Dimensi Profil Pelajar Pancasila yang mengajarkan untuk menghargai kebudayaan lain adalah...", ["Berkebinekaan Global", "Mandiri", "Kreatif", "Bernalar Kritis"], 0, "Berkebinekaan Global mengajarkan toleransi budaya."],
+                    ["Kemampuan Pelajar Pancasila untuk bekerja sama menyelesaikan tugas dinamakan dimensi...", ["Gotong Royong", "Mandiri", "Kreatif", "Bernalar Kritis"], 0, "Gotong royong adalah nilai kolaborasi."],
+                    ["Siswa yang mampu memproses informasi dan berpikir secara objektif memiliki dimensi...", ["Bernalar Kritis", "Kreatif", "Mandiri", "Berkebinekaan Global"], 0, "Bernalar kritis mampu memproses informasi dengan logis."],
+                    ["Pelajar yang mampu menghasilkan karya baru yang inovatif memiliki dimensi...", ["Kreatif", "Mandiri", "Gotong Royong", "Bernalar Kritis"], 0, "Kreatif menghasilkan ide dan karya baru."],
+                    ["Siswa yang bertindak atas kesadaran sendiri tanpa bergantung pada orang lain mencerminkan dimensi...", ["Mandiri", "Kreatif", "Gotong Royong", "Berkebinekaan Global"], 0, "Mandiri adalah bersikap tidak bergantung."],
+                    ["Tokoh proklamator Indonesia yang juga menjabat Wakil Ketua PPKI adalah...", ["Drs. Mohammad Hatta", "Ir. Soekarno", "Mr. Moh Yamin", "Sutan Sjahrir"], 0, "Bung Hatta adalah Wakil Ketua PPKI."],
+                    ["Tujuan utama dirumuskannya Pancasila adalah sebagai...", ["Dasar Negara Republik Indonesia", "Buku Pegangan Siswa", "Lagu Kemerdekaan", "Lambang Bendera"], 0, "Pancasila dirumuskan sebagai Dasar Negara."],
+                    ["Pancasila disahkan bersamaan dengan pengesahan...", ["UUD 1945", "Teks Proklamasi", "Sumpah Pemuda", "Naskah Linggajati"], 0, "Disahkan bersama UUD 1945 pada 18 Agustus 1945."],
+                    ["Nilai kebersamaan yang ditunjukkan tokoh bangsa saat mengubah kalimat Sila Pertama adalah...", ["Toleransi dan Musyawarah Demi Bekerja Sama", "Keras kepala", "Egois", "Menyerah pada musuh"], 0, "Toleransi demi keutuhan persatuan Indonesia."],
+                    ["Tokoh pendiri bangsa mengutamakan musyawarah mufakat secara rasa...", ["Keluargaan dan Kebersamaan", "Ketakutan", "Keterpaksaan", "Persaingan"], 0, "Musyawarah dilandasi rasa kekeluargaan."],
+                    ["Jumlah dimensi utama dalam Profil Pelajar Pancasila adalah...", ["6 Dimensi", "5 Dimensi", "4 Dimensi", "7 Dimensi"], 0, "Ada 6 dimensi Profil Pelajar Pancasila."],
+                    ["Berikut yang BUKAN merupakan dimensi Profil Pelajar Pancasila adalah...", ["Individualisme", "Mandiri", "Gotong Royong", "Kreatif"], 0, "Individualisme bertentangan dengan Pancasila."],
+                    ["Menjaga kebersihan dan kelestarian alam lingkungan sekitar sekolah wujud akhlak...", ["Akhlak kepada alam", "Akhlak bernegara", "Akhlak pribadi", "Akhlak kepada sesama"], 0, "Menjaga alam wujud akhlak kepada alam."],
+                    ["Sidang pertama BPUPKI dilaksanakan pada tanggal...", ["29 Mei - 1 Juni 1945", "10 - 17 Juli 1945", "17 - 18 Agustus 1945", "22 Juni - 25 Juni 1945"], 0, "Sidang I BPUPKI membicarakan dasar negara."],
+                    ["Sidang kedua BPUPKI membahas tentang...", ["Rancangan Undang-Undang Dasar", "Dasar Negara Pancasila", "Pemilihan Presiden", "Bendera Negara"], 0, "Sidang II BPUPKI membahas RUU Dasar."],
+                    ["Gedung tempat berlangsungnya sidang BPUPKI perumusan Pancasila dinamakan...", ["Gedung Chuo Sangi In (Gedung Pancasila)", "Gedung Merdeka", "Gedung DPR", "Istana Negara"], 0, "Gedung Chuo Sangi In kini dikenal Gedung Pancasila."],
+                    ["Sikap saling menghormati pendapat tokoh lain saat sidang perumusan merupakan cermin Sila ke-...", ["4", "3", "2", "1"], 0, "Saling menghargai pendapat Sila Keempat."],
+                    ["Hasil rumusan dasar negara Pancasila tertuang dalam dokumen UUD 1945 bagian...", ["Pembukaan UUD 1945 Alinea IV", "Batang Tubuh UUD 1945", "Penjelasan UUD 1945", "Pasal-pasal UUD 1945"], 0, "Pancasila terdapat pada Pembukaan UUD 1945 alinea IV."],
+                    ["Semangat patriotisme para pahlawan perumus Pancasila harus kita...", ["Teladani dan teruskan", "Lupakan saja", "Acuhkan", "Simpan di perpustakaan saja"], 0, "Semangat pahlawan patut diteladani."],
+                    ["Pelajar Pancasila selalu menyaring berita hoax di internet dengan cara...", ["Mencari kebenaran informasi (Bernalar Kritis)", "Langsung sebar berita", "Percaya begitu saja", "Membuat berita bohong"], 0, "Bernalar kritis tidak mudah percaya hoax."],
+                    ["Tindakan menghormati bendera Merah Putih saat upacara wujud dimensi...", ["Berkebinekaan Global / Akhlak Bernegara", "Mandiri saja", "Kreatif", "Egois"], 0, "Hormat bendera wujud kesadaran bernegara."],
+                    ["Bung Karno dan Bung Hatta diberi julukan sebagai...", ["Bapak Proklamator Indonesia", "Bapak Pembangunan", "Bapak Pendidikan", "Bapak Koperasi"], 0, "Soekarno-Hatta adalah Bapak Proklamator."],
+                    ["Menghargai tradisi kebudayaan daerah lain membuat bangsa Indonesia semakin...", ["Kuat dan Bersatu", "Lemah dan Hancur", "Mundur", "Terpecah belah"], 0, "Menghargai perbedaan memperkuat persatuan."],
+                    ["Proklamasi Kemerdekaan Indonesia dikumandangkan pada tanggal...", ["17 Agustus 1945", "18 Agustus 1945", "1 Juni 1945", "20 Mei 1945"], 0, "Proklamasi 17 Agustus 1945."],
+                    ["Sebagai generasi penerus bangsa, kewajiban utama siswa terhadap Pancasila adalah...", ["Mempelajari, mengamalkan, dan menjaganya dalam kehidupan", "Hanya menghafal teksnya", "Menyimpan buku saja", "Mencatat saat ujian saja"], 0, "Pancasila harus dipelajari dan diamalkan."]
+                ]
+            };
+
+            const bank = {};
+            SESSIONS.forEach(session => {
+                bank[session.id] = [];
+                const list = rawData[session.id];
+                list.forEach((item, index) => {
+                    bank[session.id].push({
+                        id: index + 1,
+                        question: item[0],
+                        options: item[1],
+                        correct: item[2],
+                        explanation: item[3]
+                    });
+                });
+            });
+            return bank;
+        }
+
+        const QUESTION_BANK = generateQuestions();
+
+        let currentSessionId = 1;
+        let currentGameMode = 'single';
+        let currentQuestionIndex = 0;
+        let autoTransitionTimer = null;
+
+        // Single Player State
+        let singlePlayerScore = 0;
+        let comboStreak = 0;
+
+        // Duel State
+        let p1Score = 0;
+        let p2Score = 0;
+        let isQuestionActive = false;
+
+        /* INITIALIZATION */
+        window.onload = function() {
+            renderSessionSelectors();
+            showMainMenu();
+
+            const devAvatar = document.getElementById('developer-avatar');
+            devAvatar.onerror = function() {
+                this.src = "https://placehold.co/120x120/4f46e5/ffffff?text=Pak+Salman";
+            };
+        };
+
+        function renderSessionSelectors() {
+            const container = document.getElementById('session-selector-container');
+            container.innerHTML = '';
+
+            SESSIONS.forEach(sess => {
+                const btn = document.createElement('button');
+                btn.onclick = () => selectSession(sess.id);
+                btn.className = `btn-press p-3.5 rounded-2xl border text-left transition-all ${
+                    currentSessionId === sess.id 
+                    ? 'bg-gradient-to-r from-indigo-600 to-sky-600 border-indigo-400 text-white shadow-lg ring-2 ring-indigo-400' 
+                    : 'bg-slate-900/80 border-slate-700/80 hover:bg-slate-700/80 text-slate-200'
+                }`;
+
+                btn.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="font-outfit font-extrabold text-sm">${sess.title}</span>
+                        ${currentSessionId === sess.id ? '<i class="fa-solid fa-circle-check text-amber-300"></i>' : ''}
+                    </div>
+                    <p class="text-xs text-slate-400 mt-1 line-clamp-1">${sess.desc}</p>
+                `;
+                container.appendChild(btn);
+            });
+        }
+
+        function selectSession(id) {
+            playSound('click');
+            currentSessionId = id;
+            renderSessionSelectors();
+        }
+
+        function clearAllTimers() {
+            if (autoTransitionTimer) clearTimeout(autoTransitionTimer);
+        }
+
+        function showMainMenu() {
+            playSound('click');
+            clearAllTimers();
+            document.getElementById('view-menu').classList.remove('hidden');
+            document.getElementById('view-single-player').classList.add('hidden');
+            document.getElementById('view-single-player').classList.remove('flex');
+            document.getElementById('view-duel').classList.add('hidden');
+            document.getElementById('view-duel').classList.remove('flex');
+            document.getElementById('view-result').classList.add('hidden');
+            document.getElementById('view-result').classList.remove('flex');
+        }
+
+        function selectGameMode(mode) {
+            playSound('click');
+            clearAllTimers();
+            currentGameMode = mode;
+            currentQuestionIndex = 0;
+
+            document.getElementById('view-menu').classList.add('hidden');
+
+            if (mode === 'single') {
+                singlePlayerScore = 0;
+                comboStreak = 0;
+                document.getElementById('view-single-player').classList.remove('hidden');
+                document.getElementById('view-single-player').classList.add('flex');
+                loadSinglePlayerQuestion();
+            } else {
+                p1Score = 0;
+                p2Score = 0;
+                document.getElementById('view-duel').classList.remove('hidden');
+                document.getElementById('view-duel').classList.add('flex');
+                loadDuelQuestion();
+            }
+        }
+
+        /* ================= SINGLE PLAYER GAME LOGIC (AUTOMATIC FAST TRANSITION, NO TIMER) ================= */
+        function loadSinglePlayerQuestion() {
+            clearAllTimers();
+            const questions = QUESTION_BANK[currentSessionId];
+            const q = questions[currentQuestionIndex];
+
+            document.getElementById('sp-session-badge').innerText = `Sesi ${currentSessionId}`;
+            document.getElementById('sp-progress-text').innerText = `Soal ${currentQuestionIndex + 1} / ${questions.length}`;
+            document.getElementById('sp-score-text').innerText = singlePlayerScore;
+            document.getElementById('sp-combo-text').innerText = `${comboStreak}x`;
+            document.getElementById('sp-question-text').innerText = q.question;
+
+            document.getElementById('sp-explanation-card').classList.add('hidden');
+            document.getElementById('sp-card').className = "bg-slate-800/90 rounded-3xl p-6 border border-slate-700 shadow-2xl space-y-6 transition-all";
+
+            const optsContainer = document.getElementById('sp-options-container');
+            optsContainer.innerHTML = '';
+
+            const labels = ['A', 'B', 'C', 'D'];
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.onclick = () => checkSinglePlayerAnswer(idx);
+                btn.className = `sp-opt-btn btn-press p-4 rounded-2xl bg-slate-900 border border-slate-700 hover:border-indigo-500 hover:bg-indigo-950/40 text-left font-semibold text-slate-200 transition-all flex items-center space-x-3`;
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-xl bg-slate-800 border border-slate-600 flex items-center justify-center font-bold text-indigo-300 text-sm flex-shrink-0">${labels[idx]}</span>
+                    <span class="text-sm md:text-base">${opt}</span>
+                `;
+                optsContainer.appendChild(btn);
+            });
+        }
+
+        function checkSinglePlayerAnswer(selectedIndex) {
+            const q = QUESTION_BANK[currentSessionId][currentQuestionIndex];
+            const buttons = document.querySelectorAll('.sp-opt-btn');
+
+            buttons.forEach(btn => btn.disabled = true);
+
+            const expCard = document.getElementById('sp-explanation-card');
+            const feedbackTitle = document.getElementById('sp-feedback-title');
+            const expText = document.getElementById('sp-explanation-text');
+
+            expCard.classList.remove('hidden');
+
+            if (selectedIndex === q.correct) {
+                playSound('correct');
+                comboStreak++;
+
+                const comboBonus = Math.min(comboStreak * 2, 10);
+                const gainedPoints = 10 + comboBonus;
+                singlePlayerScore += gainedPoints;
+
+                document.getElementById('sp-score-text').innerText = singlePlayerScore;
+                document.getElementById('sp-combo-text').innerText = `${comboStreak}x`;
+
+                buttons[selectedIndex].classList.remove('bg-slate-900', 'border-slate-700');
+                buttons[selectedIndex].classList.add('bg-emerald-950', 'border-emerald-500', 'text-emerald-200');
+
+                expCard.className = 'bg-emerald-950/90 border-2 border-emerald-500 rounded-2xl p-3 text-center shadow-2xl transition-all flash-success';
+                feedbackTitle.className = 'flex items-center justify-center space-x-2 font-bold text-base text-emerald-400';
+                feedbackTitle.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i><span>JAWABAN BENAR! (+${gainedPoints} Poin)</span>`;
+                expText.innerText = q.explanation;
+
+                autoTransitionTimer = setTimeout(nextSinglePlayerQuestion, 500);
+
+            } else {
+                playSound('wrong');
+                comboStreak = 0;
+                document.getElementById('sp-combo-text').innerText = `0x`;
+
+                buttons[selectedIndex].classList.remove('bg-slate-900', 'border-slate-700');
+                buttons[selectedIndex].classList.add('bg-rose-950', 'border-rose-500', 'text-rose-200');
+
+                buttons[q.correct].classList.remove('bg-slate-900', 'border-slate-700');
+                buttons[q.correct].classList.add('bg-emerald-950', 'border-emerald-500', 'text-emerald-200');
+
+                expCard.className = 'bg-rose-950/90 border-2 border-rose-500 rounded-2xl p-3 text-center shadow-2xl transition-all flash-danger';
+                feedbackTitle.className = 'flex items-center justify-center space-x-2 font-bold text-base text-rose-400';
+                feedbackTitle.innerHTML = `<i class="fa-solid fa-circle-xmark"></i><span>KURANG TEPAT!</span>`;
+                expText.innerText = q.explanation;
+
+                autoTransitionTimer = setTimeout(nextSinglePlayerQuestion, 800);
+            }
+        }
+
+        function nextSinglePlayerQuestion() {
+            const questions = QUESTION_BANK[currentSessionId];
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                loadSinglePlayerQuestion();
+            } else {
+                showResultCard();
+            }
+        }
+
+        /* ================= TWO PLAYER DUEL LOGIC (INSTANT AUTO-NEXT ON ANY ANSWER) ================= */
+        function loadDuelQuestion() {
+            clearAllTimers();
+            const questions = QUESTION_BANK[currentSessionId];
+            const q = questions[currentQuestionIndex];
+
+            isQuestionActive = true;
+
+            document.getElementById('duel-session-badge').innerText = `Sesi ${currentSessionId}`;
+            document.getElementById('duel-progress-text').innerText = `Soal ${currentQuestionIndex + 1} / ${questions.length}`;
+            document.getElementById('p1-score-text').innerText = p1Score;
+            document.getElementById('p2-score-text').innerText = p2Score;
+            document.getElementById('duel-question-text').innerText = q.question;
+
+            document.getElementById('duel-speed-banner').classList.add('hidden');
+
+            document.getElementById('p1-status').innerText = 'Tekan cepat!';
+            document.getElementById('p1-status').className = 'mt-2 text-center min-h-[20px] text-xs font-bold text-rose-200';
+            document.getElementById('p2-status').innerText = 'Tekan cepat!';
+            document.getElementById('p2-status').className = 'mt-2 text-center min-h-[20px] text-xs font-bold text-purple-200';
+
+            document.getElementById('p1-box').className = 'bg-gradient-to-b from-rose-950/80 to-slate-900 border-2 border-rose-500/50 rounded-3xl p-4 flex flex-col justify-between shadow-2xl relative overflow-hidden transition-all';
+            document.getElementById('p2-box').className = 'bg-gradient-to-b from-purple-950/80 to-slate-900 border-2 border-purple-500/50 rounded-3xl p-4 flex flex-col justify-between shadow-2xl relative overflow-hidden transition-all';
+
+            const labels = ['A', 'B', 'C', 'D'];
+
+            // P1 Buttons
+            const p1Container = document.getElementById('p1-options-container');
+            p1Container.innerHTML = '';
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.onclick = () => handleDuelAnswer(1, idx);
+                btn.className = `p1-opt-btn btn-press p-3 rounded-2xl bg-slate-900 border border-rose-800/80 hover:bg-rose-900/40 text-left font-semibold text-rose-100 transition-all flex items-center space-x-2.5`;
+                btn.innerHTML = `
+                    <span class="w-7 h-7 rounded-lg bg-rose-950 border border-rose-600 flex items-center justify-center font-bold text-rose-300 text-xs flex-shrink-0">${labels[idx]}</span>
+                    <span class="text-xs sm:text-sm">${opt}</span>
+                `;
+                p1Container.appendChild(btn);
+            });
+
+            // P2 Buttons
+            const p2Container = document.getElementById('p2-options-container');
+            p2Container.innerHTML = '';
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.onclick = () => handleDuelAnswer(2, idx);
+                btn.className = `p2-opt-btn btn-press p-3 rounded-2xl bg-slate-900 border border-purple-800/80 hover:bg-purple-900/40 text-left font-semibold text-purple-100 transition-all flex items-center space-x-2.5`;
+                btn.innerHTML = `
+                    <span class="w-7 h-7 rounded-lg bg-purple-950 border border-purple-600 flex items-center justify-center font-bold text-purple-300 text-xs flex-shrink-0">${labels[idx]}</span>
+                    <span class="text-xs sm:text-sm">${opt}</span>
+                `;
+                p2Container.appendChild(btn);
+            });
+        }
+
+        function handleDuelAnswer(player, selectedIndex) {
+            if (!isQuestionActive) return;
+
+            isQuestionActive = false;
+
+            const q = QUESTION_BANK[currentSessionId][currentQuestionIndex];
+            const p1Btns = document.querySelectorAll('.p1-opt-btn');
+            const p2Btns = document.querySelectorAll('.p2-opt-btn');
+
+            p1Btns.forEach(btn => btn.disabled = true);
+            p2Btns.forEach(btn => btn.disabled = true);
+
+            const banner = document.getElementById('duel-speed-banner');
+
+            if (selectedIndex === q.correct) {
+                playSound('steal');
+
+                if (player === 1) {
+                    p1Score += 10;
+                    document.getElementById('p1-score-text').innerText = p1Score;
+                    p1Btns[selectedIndex].className = 'p1-opt-btn p-3 rounded-2xl bg-emerald-950 border-2 border-emerald-500 text-emerald-200 font-bold text-left flex items-center space-x-2.5';
+                    document.getElementById('p1-status').innerText = '⚡ BENAR! (+10)';
+                    document.getElementById('p1-status').className = 'mt-2 text-center min-h-[20px] text-xs font-black text-emerald-400';
+
+                    banner.innerText = "🍎 PEMAIN 1 BENAR (+10)";
+                    banner.className = "absolute inset-0 bg-emerald-600/90 text-white font-black text-lg sm:text-xl flex items-center justify-center z-10 animate-fast-pulse";
+                } else {
+                    p2Score += 10;
+                    document.getElementById('p2-score-text').innerText = p2Score;
+                    p2Btns[selectedIndex].className = 'p2-opt-btn p-3 rounded-2xl bg-emerald-950 border-2 border-emerald-500 text-emerald-200 font-bold text-left flex items-center space-x-2.5';
+                    document.getElementById('p2-status').innerText = '⚡ BENAR! (+10)';
+                    document.getElementById('p2-status').className = 'mt-2 text-center min-h-[20px] text-xs font-black text-emerald-400';
+
+                    banner.innerText = "🍇 PEMAIN 2 BENAR (+10)";
+                    banner.className = "absolute inset-0 bg-emerald-600/90 text-white font-black text-lg sm:text-xl flex items-center justify-center z-10 animate-fast-pulse";
+                }
+
+            } else {
+                playSound('wrong');
+
+                if (player === 1) {
+                    p1Btns[selectedIndex].className = 'p1-opt-btn p-3 rounded-2xl bg-rose-950 border-2 border-rose-500 text-rose-200 font-bold text-left flex items-center space-x-2.5';
+                    document.getElementById('p1-status').innerText = '❌ SALAH!';
+                    document.getElementById('p1-status').className = 'mt-2 text-center min-h-[20px] text-xs font-black text-rose-400';
+
+                    banner.innerText = "🍎 PEMAIN 1 SALAH!";
+                    banner.className = "absolute inset-0 bg-rose-600/90 text-white font-black text-lg sm:text-xl flex items-center justify-center z-10 animate-fast-pulse";
+                } else {
+                    p2Btns[selectedIndex].className = 'p2-opt-btn p-3 rounded-2xl bg-purple-950 border-2 border-purple-500 text-purple-200 font-bold text-left flex items-center space-x-2.5';
+                    document.getElementById('p2-status').innerText = '❌ SALAH!';
+                    document.getElementById('p2-status').className = 'mt-2 text-center min-h-[20px] text-xs font-black text-purple-400';
+
+                    banner.innerText = "🍇 PEMAIN 2 SALAH!";
+                    banner.className = "absolute inset-0 bg-purple-600/90 text-white font-black text-lg sm:text-xl flex items-center justify-center z-10 animate-fast-pulse";
+                }
+            }
+
+            banner.classList.remove('hidden');
+
+            autoTransitionTimer = setTimeout(nextDuelQuestion, 400);
+        }
+
+        function nextDuelQuestion() {
+            const questions = QUESTION_BANK[currentSessionId];
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                loadDuelQuestion();
+            } else {
+                showResultCard();
+            }
+        }
+
+        /* ================= RESULT SCORECARD LOGIC ================= */
+        function showResultCard() {
+            clearAllTimers();
+            playSound('win');
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 120,
+                    spread: 80,
+                    origin: { y: 0.6 }
+                });
+            }
+
+            document.getElementById('view-single-player').classList.add('hidden');
+            document.getElementById('view-duel').classList.add('hidden');
+            document.getElementById('view-result').classList.remove('hidden');
+            document.getElementById('view-result').classList.add('flex');
+
+            const resultDetails = document.getElementById('result-details');
+            const subtitle = document.getElementById('result-subtitle');
+
+            if (currentGameMode === 'single') {
+                subtitle.innerText = `Kompetisi Mandiri - Sesi ${currentSessionId}`;
+                const totalPossible = QUESTION_BANK[currentSessionId].length * 10;
+                const percentage = Math.round((singlePlayerScore / totalPossible) * 100);
+
+                resultDetails.innerHTML = `
+                    <div class="flex justify-between items-center text-sm border-b border-slate-800 pb-2">
+                        <span class="text-slate-400">Total Soal Selesai</span>
+                        <span class="font-bold text-white">${QUESTION_BANK[currentSessionId].length} Soal</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm border-b border-slate-800 pb-2">
+                        <span class="text-slate-400">Total Poin Perolehan</span>
+                        <span class="font-bold text-amber-300 text-lg">${singlePlayerScore} Poin</span>
+                    </div>
+                    <div class="flex justify-between items-center text-base pt-1">
+                        <span class="text-slate-300 font-bold">Tingkat Akurasi</span>
+                        <span class="font-black text-emerald-400 text-xl">${percentage}%</span>
+                    </div>
+                `;
+            } else {
+                subtitle.innerText = `Hasil Pertandingan Adu Cepat Duel - Sesi ${currentSessionId}`;
+                let winnerText = "";
+                if (p1Score > p2Score) {
+                    winnerText = "🍎 PEMAIN 1 (APEL) JUARA ADU CEPAT!";
+                } else if (p2Score > p1Score) {
+                    winnerText = "🍇 PEMAIN 2 (ANGGUR) JUARA ADU CEPAT!";
+                } else {
+                    winnerText = "🤝 SERI! KECEPATAN KALIAN SEIMBANG!";
+                }
+
+                resultDetails.innerHTML = `
+                    <div class="text-center font-outfit font-extrabold text-amber-300 text-lg pb-2 border-b border-slate-800 animate-pulse">
+                        ${winnerText}
+                    </div>
+                    <div class="flex justify-around items-center pt-3">
+                        <div class="text-center">
+                            <span class="text-xs text-rose-300 uppercase font-bold block">Pemain 1 (Apel)</span>
+                            <span class="text-4xl font-black text-rose-400 font-outfit">${p1Score}</span>
+                        </div>
+                        <div class="text-2xl font-black text-slate-600">VS</div>
+                        <div class="text-center">
+                            <span class="text-xs text-purple-300 uppercase font-bold block">Pemain 2 (Anggur)</span>
+                            <span class="text-4xl font-black text-purple-400 font-outfit">${p2Score}</span>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function restartCurrentSession() {
+            playSound('click');
+            selectGameMode(currentGameMode);
+        }
+    </script>
+</body>
+</html>
